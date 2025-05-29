@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Faizu Approval</title>
+</head>
+<body style="text-align:center; font-family:sans-serif;">
+  <h1>Faizu Approval</h1>
+
+  {% if key %}
+    <p>Your Key: <b>{{ key }}</b></p>
+    {% if approved %}
+      <h2>✅ Approved</h2>
+      <a href="https://faiizuapk.unaux.com/">Enter App</a>
+    {% else %}
+      <h2>⏳ Waiting for Approval</h2>
+      <p>Send this key to Faizu!</p>
+    {% endif %}
+  {% else %}
+    <form action="/generate" method="post">
+      <button type="submit">Get My Key</button>
+    </form>
+  {% endif %}
+</body>
+</html>
