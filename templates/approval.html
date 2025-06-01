@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pending Approval</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: #111;
+      color: #eee;
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+    .box {
+      background: #222;
+      padding: 20px;
+      border-radius: 10px;
+      display: inline-block;
+      box-shadow: 0 0 10px #ffaa00;
+    }
+    .emoji {
+      font-size: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2 class="emoji"> Waiting for Admin Approval</h2>
+    <p>Thank you! Your device ID <code>{{ device_id }}</code> is pending approval.</p>
+    <p>Please wait until <strong>Faiizu</strong> or <strong>Stuner</strong> approves you.</p>
+  </div>
+</body>
+</html>
