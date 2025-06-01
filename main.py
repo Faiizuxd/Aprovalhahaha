@@ -5,18 +5,17 @@ import socket
 
 app = Flask(__name__)
 
-# 🔐 Load Firebase credentials
+# Load Firebase credentials
 cred = credentials.Certificate("firebase_key.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
-# ✅ Your admin IP (only this IP can access the admin panel)
+# Admin IP
 ADMIN_IP = "37.111.145.91"
 
-# 🏠 Home route (user approval check)
 @app.route("/")
 def home():
-    device_id = request.remote_addr  # Use real device ID in APK version
+    device_id = request.remote_addr
     doc_ref = db.collection("devices").document(device_id)
     doc = doc_ref.get()
 
@@ -30,22 +29,19 @@ def home():
         doc_ref.set({"approved": False})
         return render_template("welcome.html", device_id=device_id)
 
-# 📤 Send to Faiizu
 @app.route("/send", methods=["POST"])
 def send():
     return redirect("https://www.facebook.com/The.Unbeatble.Stark")
 
-# 📤 Send to Stuner
 @app.route("/send2", methods=["POST"])
 def send2():
     return redirect("https://www.facebook.com/asadmeer.645927")
 
-# 🔐 Admin panel route (restricted to ADMIN_IP only)
 @app.route("/admin-faizi-panel-1000000100003737")
 def admin():
     if request.remote_addr != ADMIN_IP:
         return "Access Denied"
-
+    
     devices = db.collection("devices").get()
     pending = []
     approved = []
@@ -59,22 +55,21 @@ def admin():
 
     return render_template("admin.html", pending=pending, approved=approved)
 
-# ✅ Approve device
 @app.route("/approve/<device_id>")
 def approve(device_id):
     if request.remote_addr != ADMIN_IP:
         return "Access Denied"
+    
     db.collection("devices").document(device_id).update({"approved": True})
     return redirect("/admin-faizi-panel-1000000100003737")
 
-# ❌ Reject/Delete device
 @app.route("/reject/<device_id>")
 def reject(device_id):
     if request.remote_addr != ADMIN_IP:
         return "Access Denied"
+    
     db.collection("devices").document(device_id).delete()
     return redirect("/admin-faizi-panel-1000000100003737")
 
-# 🚀 Run Flask App
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
