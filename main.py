@@ -1,73 +1,58 @@
-from flask import Flask, request, render_template_string
+from flask import Flask, request, render_template_string, redirect
 import firebase_admin
 from firebase_admin import credentials, firestore
-import os
+import socket
 
-# Initialize Flask app
-app = Flask(__name__)
+# Replace with your IP
+ADMIN_IP = "139.135.45.48"
 
-# Load Firebase Admin credentials
+# Initialize Firebase
 cred = credentials.Certificate("firebase_key.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
-# ✅ Only this IP can access admin panel
-ADMIN_IP = "139.135.45.48"  # 🔁 Replace this with YOUR real IP
+app = Flask(__name__)
 
-# Admin Panel HTML Template
-admin_html = '''
-<h1>Admin Approval Panel</h1>
-<h3>Only visible from Admin IP</h3>
-<ul>
-{% for doc in docs %}
-  <li>
-    <strong>{{ doc.id }}</strong> — Status: {{ doc.to_dict().get('status') }}
-    {% if doc.to_dict().get('status') == "pending" %}
-      <form method="POST" action="/approve/{{ doc.id }}">
-        <button>Approve</button>
-      </form>
-    {% endif %}
-  </li>
-{% endfor %}
-</ul>
-'''
+@app.route("/")
+def index():
+    user_ip = request.remote_addr
+    key = request.args.get("key")
+    if not key:
+        return "🔑 No key provided."
 
-# 🔒 Admin Panel Route
+    doc_ref = db.collection("users").document(key)
+    doc = doc_ref.get()
+
+    if not doc.exists:
+        doc_ref.set({"status": "pending", "ip": user_ip})
+        return "⏳ Your key is pending approval."
+
+    data = doc.to_dict()
+    if data.get("status") == "approved":
+        return "✅ Approved! You may continue."
+    return "⏳ Still pending approval."
+
 @app.route("/admin")
 def admin():
-    ip = request.remote_addr
-    if ip != ADMIN_IP:
-        return "Aukat main rahe bsdk owner Tera papa Faizu Hai 🩷.", 403
+    user_ip = request.remote_addr
+    if user_ip != ADMIN_IP:
+        return "⛔ Access Denied. You're not the admin."
 
-    docs = db.collection("approvals").stream()
-    return render_template_string(admin_html, docs=docs)
+    users = db.collection("users").stream()
+    html = "<h2>Admin Panel</h2><ul>"
+    for u in users:
+        d = u.to_dict()
+        html += f"<li>{u.id} - {d.get('status')} - <a href='/approve/{u.id}'>Approve</a></li>"
+    html += "</ul>"
+    return html
 
-# ✅ Approve Key Route
-@app.route("/approve/<key>", methods=["POST"])
-def approve(key):
-    ip = request.remote_addr
-    if ip != ADMIN_IP:
-        return "❌ Unauthorized Request", 403
+@app.route("/approve/<key>")
+def approve_key(key):
+    user_ip = request.remote_addr
+    if user_ip != ADMIN_IP:
+        return "⛔ Not allowed."
+    db.collection("users").document(key).update({"status": "approved"})
+    return redirect("/admin")
 
-    db.collection("approvals").document(key).update({"status": "approved"})
-    return f"✅ Approved: {key}"
-
-# 🔑 User asks for key
-@app.route("/request_key/<key>")
-def request_key(key):
-    db.collection("approvals").document(key).set({"status": "pending"})
-    return "🔐 Key submitted for approval. Wait for Admin."
-
-# 🔎 Check if key approved
-@app.route("/get_key/<key>")
-def get_key(key):
-    doc = db.collection("approvals").document(key).get()
-    if doc.exists and doc.to_dict().get("status") == "approved":
-        return "✅ Approved Key - Access Granted"
-    else:
-        return "⏳ Waiting for Admin Approval"
-
-# Run server on Render
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=10000)
