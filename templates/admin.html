@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel - Faizi 🔐</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: #1a1a1a;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      padding: 40px;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+    }
+    h2 {
+      color: #0f0;
+    }
+    .card {
+      background: #2a2a2a;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 10px 0;
+      box-shadow: 0 0 5px #888;
+    }
+    .actions button {
+      margin: 5px;
+      padding: 5px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .approve {
+      background: #28a745;
+      color: white;
+    }
+    .reject {
+      background: #dc3545;
+      color: white;
+    }
+    .delete {
+      background: #ffc107;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2><i class="fas fa-user-shield"></i> Admin Panel</h2>
+
+    <h3>⏳ Pending Approvals</h3>
+    {% for device_id in pending %}
+    <div class="card">
+      <p><strong>{{ device_id }}</strong></p>
+      <div class="actions">
+        <form method="POST" style="display:inline;">
+          <input type="hidden" name="approve" value="{{ device_id }}">
+          <button class="approve"><i class="fas fa-check-circle"></i> Approve</button>
+        </form>
+        <form method="POST" style="display:inline;">
+          <input type="hidden" name="reject" value="{{ device_id }}">
+          <button class="reject"><i class="fas fa-times-circle"></i> Reject</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+
+    <h3>✅ Approved Users</h3>
+    {% for device_id in approved %}
+    <div class="card">
+      <p><strong>{{ device_id }}</strong></p>
+      <div class="actions">
+        <form method="POST" style="display:inline;">
+          <input type="hidden" name="delete" value="{{ device_id }}">
+          <button class="delete"><i class="fas fa-trash-alt"></i> Delete</button>
+        </form>
+      </div>
+    </
