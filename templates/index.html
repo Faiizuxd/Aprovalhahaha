@@ -1,77 +1,60 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TERROR Apk Approval</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <title>Welcome to TERROR Apk</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <style>
     body {
-      background: linear-gradient(to right, #ff4e50, #f9d423);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: white;
-      margin: 0;
-      padding: 20px;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to right, #111, #222);
+      color: #fff;
       text-align: center;
+      padding: 30px;
     }
     .box {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 15px;
+      background: #1e1e1e;
+      border-radius: 10px;
       padding: 20px;
-      margin: 20px auto;
       max-width: 500px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      margin: auto;
+      box-shadow: 0 0 10px #ff0000;
     }
     .btn {
-      display: inline-block;
-      background: #000000aa;
-      color: #fff;
-      padding: 10px 20px;
-      margin-top: 10px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-size: 0.9rem;
-      transition: background 0.3s;
+      background: #ff3d3d;
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      font-size: 14px;
+      border-radius: 5px;
+      margin-top: 15px;
+      cursor: pointer;
     }
     .btn:hover {
-      background: #000;
+      background: #ff0000;
     }
-    small {
-      font-size: 0.8rem;
-      color: #ccc;
+    a {
+      color: #00bfff;
+      text-decoration: none;
     }
-    h2, h3 {
-      margin-bottom: 10px;
+    .emoji {
+      font-size: 24px;
     }
   </style>
 </head>
-<body>  <div class="box" id="approval-box">
-    <h2><i class="fas fa-key"></i> Welcome to TERROR Apk</h2>
-    <p>This apk is made for Convo Server, Post & Other Tools.<br>Send your device ID to the admin for approval.</p>
-    <p><strong>Your Device ID:</strong> <span id="device-id">LOADING...</span></p>
-    <a href="https://www.facebook.com/The.Unbeatble.Stark" target="_blank" class="btn">
-      <i class="fab fa-facebook"></i> Send to Faiizu
-    </a>
-    <a href="https://www.facebook.com/asadmeer.645927" target="_blank" class="btn">
-      <i class="fab fa-facebook"></i> Send to Stuner
-    </a>
-    <small>Note: Send only once, one device = one key.</small>
-  </div>  <div class="box" id="approved-box" style="display: none">
-    <h2><i class="fas fa-check-circle"></i> You're Approved!</h2>
-    <p>Hi Mr. Now you're a paid & approved user. Welcome to The TERROR Apk!<br>Nice to meet you!<br><br>All credit goes to <strong>Stuner × Faiizu</strong> for this apk & hosting. Enjoy!</p>
-    <a href="https://faiizuapk.unaux.com/" class="btn"><i class="fas fa-play"></i> Start</a>
-  </div>  <div class="box" id="admin-panel" style="display: none">
-    <h3><i class="fas fa-shield-alt"></i> Admin Panel</h3>
-    <p>Only accessible from approved IP: <code>37.111.145.91</code></p>
-    <p>Total Users: <span id="total-users">0</span></p>
-    <div id="pending-list"></div>
-    <h4>Approved Users</h4>
-    <div id="approved-list"></div>
-  </div>  <script>
-    const deviceId = localStorage.getItem('terror_device_id') || crypto.randomUUID();
-    localStorage.setItem('terror_device_id', deviceId);
-    document.getElementById('device-id').textContent = deviceId;
-
-    // Logic to switch between pages based on Firebase status would go here (using Python backend)
-    // Also use IP check to show admin-panel only for specific IP
-  </script></body>
+<body>
+  <div class="box">
+    <h2 class="emoji">Welcome to <span style="color: #ff3d3d;">TERROR Apk</span></h2>
+    <p>This app is made for Convo Server, Post & Tools.<br>Send your device ID for approval.</p>
+    <p><strong>Your Device ID:</strong> <code>{{ device_id }}</code></p>
+    <form method="POST">
+      <button type="submit" class="btn"><i class="fas fa-paper-plane"></i> Send to Admin</button>
+    </form>
+    <p>Contact Admins:</p>
+    <p>
+      <a href="https://www.facebook.com/The.Unbeatble.Stark" target="_blank">Faiizu </a> |
+      <a href="https://www.facebook.com/asadmeer.645927" target="_blank">Stuner </a>
+    </p>
+  </div>
+</body>
 </html>
